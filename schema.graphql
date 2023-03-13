@@ -1,0 +1,43 @@
+type Leopard @entity {
+  id: ID! #tokenID
+  tokenID: BigInt!
+  uri: String!
+  collectionAddress: Bytes!
+  owner: User! # address
+  previousOwner: User # address
+  removed: BigInt
+  lastModifiedBlock: BigInt!
+  transfers: [Transfer!] @derivedFrom(field: "leopard")
+}
+
+type User @entity {
+  id: ID! #wallet addres
+  leopards: [Leopard!] @derivedFrom(field: "owner")
+}
+
+type Mint @entity(immutable: true) {
+  id: Bytes! #txHash
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  receiver: User!
+  leopard: Leopard!
+}
+
+type Burn @entity(immutable: true) {
+  id: Bytes! #txHash
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  sender: User!
+  leopard: Leopard!
+}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes! #txHash
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  receiver: User!
+  sender: User!
+  leopard: Leopard!
+}
+
+

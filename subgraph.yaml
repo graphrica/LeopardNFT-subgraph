@@ -1,0 +1,30 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: LeopardNFT
+    network: mainnet
+    source:
+      address: "0x9a9ec78b695b144e7ee7a2e04e233fc14b0d5e17"
+      abi: LeopardNFT
+      startBlock: 15013314
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - OwnershipTransferred
+        - Transfer
+      abis:
+        - name: LeopardNFT
+          file: ./abis/LeopardNFT.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          topic0: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+          handler: handleTransfer
+      file: ./src/leopard-nft.ts
+
+
