@@ -7,7 +7,25 @@ type Leopard @entity {
   previousOwner: User # address
   removed: BigInt
   lastModifiedBlock: BigInt!
+  metadata: LeopardMetadata
   transfers: [Transfer!] @derivedFrom(field: "leopard")
+}
+
+type LeopardMetadata @entity {
+  id: ID! # IPFS URI
+  image: String!
+  externalURL: String!
+  animationURL: String!
+  name: String!
+  description: String!
+  attributes: [Attribute!] @derivedFrom(field: "metadata")
+}
+
+type Attribute @entity {
+  id: ID! # LeopardMetadataID-TraitIndex
+  traitType: String!
+  value: String!
+  metadata: LeopardMetadata!
 }
 
 type User @entity {
