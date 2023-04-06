@@ -52,7 +52,7 @@ export function burnLeopard(tokenID: BigInt, blockNumber: BigInt) : void {
 }
 
 export function createMint(txHash: Bytes, tokenID: BigInt, receiverID: string, blockNumber: BigInt, timestamp: BigInt) : void {
-    let mint = new Mint(txHash.toHexString());
+    let mint = new Mint(txHash);
     mint.leopard = tokenID.toHexString();
     mint.timestamp = timestamp;
     mint.blockNumber = blockNumber;
@@ -62,7 +62,7 @@ export function createMint(txHash: Bytes, tokenID: BigInt, receiverID: string, b
 
 
 export function createTransfer(txHash: Bytes, tokenID: BigInt, receiverID: string, senderID: string, blockNumber: BigInt, timestamp: BigInt) : void {
-    let transfer = new Transfer(txHash.toHexString());
+    let transfer = new Transfer(txHash);
     transfer.leopard = tokenID.toHexString();
     transfer.timestamp = timestamp;
     transfer.blockNumber = blockNumber;
@@ -73,7 +73,7 @@ export function createTransfer(txHash: Bytes, tokenID: BigInt, receiverID: strin
 
 
 export function createBurn(txHash: Bytes, tokenID: BigInt, senderID: string, blockNumber: BigInt, timestamp: BigInt) : void {
-    let burn = new Burn(txHash.toHexString());
+    let burn = new Burn(txHash);
     burn.leopard = tokenID.toHexString();
     burn.timestamp = timestamp;
     burn.blockNumber = blockNumber;
