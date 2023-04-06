@@ -1,6 +1,7 @@
 import { Bytes, BigInt, Address } from "@graphprotocol/graph-ts";
 import { User, Leopard, Burn, Mint, Transfer } from "../generated/schema";
-import { LeopardNFT } from "../generated/LeopardNFT/LeopardNFT"; 
+import { LeopardNFT } from "../generated/LeopardNFT/LeopardNFT";
+import { LeopardMetadata as LeopardMetadataTemplate } from "../generated/templates";
 
 export const ADDRESS_ZERO = Address.fromString("0x0000000000000000000000000000000000000000");
 
@@ -21,10 +22,15 @@ export function createLeopard(tokenID: BigInt, collectionAddress: Bytes, ownerID
     leopard.tokenID = tokenID;
     let contract = LeopardNFT.bind(Address.fromBytes(collectionAddress));
     let uriResponse = contract.try_tokenURI(tokenID);
+    let uriIPFS = "";
     if(!uriResponse.reverted) {
         leopard.uri = uriResponse.value;
+        uriIPFS = uriResponse.value.replace("ipfs://", "");
+        leopard.metadata = uriIPFS;
     }
     leopard.save()
+
+    LeopardMetadataTemplate.create(uriIPFS);
     return leopard;
 }
 
