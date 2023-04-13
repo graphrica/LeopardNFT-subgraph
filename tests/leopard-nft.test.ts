@@ -82,7 +82,7 @@ describe("Handle Transfer Event", () => {
   
    //Assert
    assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", userTwoAddress.toHexString());
-   //assert.fieldEquals("Leopard", tokenId.toHexString(), "previousOwner", userOneAddress.toHexString())
+   assert.fieldEquals("Leopard", tokenId.toHexString(), "previousOwner", userOneAddress.toHexString())
    assert.fieldEquals("Leopard", tokenId.toHexString(), "lastModifiedBlock", blockNumber.toString());
    assert.fieldEquals("Transfer", transactionHash.toHexString(), "leopard", tokenId.toHexString());
    assert.fieldEquals("Transfer", transactionHash.toHexString(), "sender", userOneAddress.toHexString());
