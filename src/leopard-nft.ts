@@ -11,7 +11,7 @@ import {
   updateLeopardOwner,
 } from "./helper";
 
-export function handleTransfer(event: Transfer, isTest : boolean = false): void {
+export function handleTransfer(event: Transfer): void {
   // If the from is the zeroAddress -> MINT
   // If the to is the zeroAddress -> BURN
   // Everything else -> Transfer
@@ -31,8 +31,7 @@ export function handleTransfer(event: Transfer, isTest : boolean = false): void 
         event.params.tokenId,
         event.address,
         receiver.id,
-        event.block.number,
-        isTest
+        event.block.number
       );
       createMint(
         event.transaction.hash,

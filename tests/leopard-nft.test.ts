@@ -28,7 +28,7 @@ describe("Handle Transfer Event", () => {
     createMockedURICall(collectionAddress, tokenId, "IPFS");
 
     //Act
-    handleTransfer(mintEvent, true)
+    handleTransfer(mintEvent)
 
     //Assert
     assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", userTwoAddress.toHexString());
@@ -48,7 +48,7 @@ describe("Handle Transfer Event", () => {
    
 
     //Act
-    handleTransfer(burnEvent, true)
+    handleTransfer(burnEvent)
 
     //Assert
     assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", ADDRESS_ZERO.toHexString())
@@ -68,7 +68,7 @@ describe("Handle Transfer Event", () => {
    let transferEvent = createTransferEvent(userOneAddress, userTwoAddress, tokenId, collectionAddress, transactionHash, blockNumber);
 
    //Act
-   handleTransfer(transferEvent, true)
+   handleTransfer(transferEvent)
   
    //Assert
    assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", userTwoAddress.toHexString());
