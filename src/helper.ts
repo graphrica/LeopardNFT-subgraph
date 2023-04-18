@@ -14,7 +14,7 @@ export function getOrCreateUser(address: Bytes) : User | null {
     return user;
 }
 
-export function createLeopard(tokenID: BigInt, collectionAddress: Bytes, ownerID: string, blockNumber: BigInt): Leopard {
+export function createLeopard(tokenID: BigInt, collectionAddress: Bytes, ownerID: string, blockNumber: BigInt, isTest: boolean): Leopard {
     let leopard = new Leopard(tokenID.toHexString());
     leopard.collectionAddress = collectionAddress;
     leopard.owner = ownerID;
@@ -30,8 +30,8 @@ export function createLeopard(tokenID: BigInt, collectionAddress: Bytes, ownerID
         leopard.metadata = uriIPFS;
     }
     leopard.save()
-
-    LeopardMetadataTemplate.create(uriIPFS);
+    if(!isTest)
+        LeopardMetadataTemplate.create(uriIPFS);
     return leopard;
 }
 
