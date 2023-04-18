@@ -3,11 +3,9 @@ import {
   test,
   clearStore,
   afterEach,
-  beforeEach,
-  assert,
-  dataSourceMock
+  assert
 } from "matchstick-as/assembly/index"
-import { Address, BigInt, Bytes, DataSourceContext, Value } from "@graphprotocol/graph-ts"
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
 import { handleTransfer } from "../src/leopard-nft"
 import { ADDRESS_ZERO, collectionAddress, createLeopard, createMockedURICall, createTransferEvent, getOrCreateUser, userOneAddress, userThreeAddress, userTwoAddress } from "./leopard-nft-utils"
 
@@ -15,13 +13,6 @@ import { ADDRESS_ZERO, collectionAddress, createLeopard, createMockedURICall, cr
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
 
 describe("Handle Transfer Event", () => {
-  beforeEach(() => {
-    getOrCreateUser(userOneAddress)
-    getOrCreateUser(userTwoAddress)
-    getOrCreateUser(userThreeAddress)
-
-  })
-
   afterEach(() => {
     clearStore()
   })
@@ -60,7 +51,6 @@ describe("Handle Transfer Event", () => {
     handleTransfer(burnEvent, true)
 
     //Assert
-    //assert.fieldEquals("Leopard", tokenId.toHexString(), "previousOwner", userOneAddress.toHexString())
     assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", ADDRESS_ZERO.toHexString())
     assert.fieldEquals("Leopard", tokenId.toHexString(), "removed", blockNumber.toString())
     assert.fieldEquals("Burn", transactionHash.toHexString(), "sender", userOneAddress.toHexString())
@@ -82,7 +72,6 @@ describe("Handle Transfer Event", () => {
   
    //Assert
    assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", userTwoAddress.toHexString());
-   //assert.fieldEquals("Leopard", tokenId.toHexString(), "previousOwner", userOneAddress.toHexString())
    assert.fieldEquals("Leopard", tokenId.toHexString(), "lastModifiedBlock", blockNumber.toString());
    assert.fieldEquals("Transfer", transactionHash.toHexString(), "leopard", tokenId.toHexString());
    assert.fieldEquals("Transfer", transactionHash.toHexString(), "sender", userOneAddress.toHexString());
