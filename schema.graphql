@@ -4,7 +4,7 @@ type Leopard @entity {
   uri: String!
   collectionAddress: Bytes!
   owner: User! # address
-  previousOwner: User # address
+  previousOwner: User! # address
   removed: BigInt
   lastModifiedBlock: BigInt!
   metadata: LeopardMetadata

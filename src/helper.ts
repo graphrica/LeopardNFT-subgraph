@@ -18,6 +18,7 @@ export function createLeopard(tokenID: BigInt, collectionAddress: Bytes, ownerID
     let leopard = new Leopard(tokenID.toHexString());
     leopard.collectionAddress = collectionAddress;
     leopard.owner = ownerID;
+    leopard.previousOwner = ADDRESS_ZERO.toHexString();
     leopard.lastModifiedBlock = blockNumber;
     leopard.tokenID = tokenID;
     let contract = LeopardNFT.bind(Address.fromBytes(collectionAddress));

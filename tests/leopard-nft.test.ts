@@ -1,62 +1,80 @@
 import {
-  assert,
   describe,
   test,
   clearStore,
-  beforeAll,
-  afterAll
+  afterEach,
+  assert
 } from "matchstick-as/assembly/index"
-import { Address, BigInt } from "@graphprotocol/graph-ts"
-import { ExampleEntity } from "../generated/schema"
-import { Approval } from "../generated/LeopardNFT/LeopardNFT"
-import { handleApproval } from "../src/leopard-nft"
-import { createApprovalEvent } from "./leopard-nft-utils"
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
+import { handleTransfer } from "../src/leopard-nft"
+import { ADDRESS_ZERO, collectionAddress, createLeopard, createMockedURICall, createTransferEvent, getOrCreateUser, userOneAddress, userThreeAddress, userTwoAddress } from "./leopard-nft-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
 
-describe("Describe entity assertions", () => {
-  beforeAll(() => {
-    let owner = Address.fromString("0x0000000000000000000000000000000000000001")
-    let approved = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let tokenId = BigInt.fromI32(234)
-    let newApprovalEvent = createApprovalEvent(owner, approved, tokenId)
-    handleApproval(newApprovalEvent)
-  })
-
-  afterAll(() => {
+describe("Handle Transfer Event", () => {
+  afterEach(() => {
     clearStore()
   })
 
-  // For more test scenarios, see:
-  // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
 
-  test("ExampleEntity created and stored", () => {
-    assert.entityCount("ExampleEntity", 1)
+  test("Mint", () => {
+    //Arrange
+    getOrCreateUser(userTwoAddress)
+    let tokenId = BigInt.fromI32(4);
+    let transactionHash = Bytes.fromHexString("0x02082029394f438ca1472adeb502c30376df44983ca7cc1f99c4917e14223e90");
+    let blockNumber = BigInt.fromString("4");
+    let mintEvent = createTransferEvent(ADDRESS_ZERO, userTwoAddress, tokenId, collectionAddress, transactionHash, blockNumber);
+    createMockedURICall(collectionAddress, tokenId, "IPFS");
 
-    // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
-    assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "owner",
-      "0x0000000000000000000000000000000000000001"
-    )
-    assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "approved",
-      "0x0000000000000000000000000000000000000001"
-    )
-    assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "tokenId",
-      "234"
-    )
+    //Act
+    handleTransfer(mintEvent)
 
-    // More assert options:
-    // https://thegraph.com/docs/en/developer/matchstick/#asserts
+    //Assert
+    assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", userTwoAddress.toHexString());
+    assert.fieldEquals("Mint", transactionHash.toHexString(), "blockNumber", blockNumber.toString());
+    assert.fieldEquals("Mint", transactionHash.toHexString(), "receiver", userTwoAddress.toHexString());
+    assert.fieldEquals("Mint", transactionHash.toHexString(), "leopard", tokenId.toHexString())
+  })
+  test("Burn", () => {
+    //Arrange
+    getOrCreateUser(userOneAddress)
+    createLeopard(BigInt.fromI32(1), collectionAddress, userOneAddress.toString(), BigInt.fromString("1"))
+   
+    let tokenId = BigInt.fromI32(1);
+    let transactionHash = Bytes.fromHexString("0x02082029394f438ca1472adeb502c30376df44983ca7cc1f99c4917e14223e90");
+    let blockNumber = BigInt.fromString("4");
+    let burnEvent = createTransferEvent(userOneAddress, ADDRESS_ZERO, tokenId, collectionAddress, transactionHash, blockNumber);
+   
+
+    //Act
+    handleTransfer(burnEvent)
+
+    //Assert
+    assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", ADDRESS_ZERO.toHexString())
+    assert.fieldEquals("Leopard", tokenId.toHexString(), "removed", blockNumber.toString())
+    assert.fieldEquals("Burn", transactionHash.toHexString(), "sender", userOneAddress.toHexString())
+    assert.fieldEquals("Burn", transactionHash.toHexString(), "leopard", tokenId.toHexString())
+
+  })
+  test("Transfer", () => {
+   //Arrange
+   getOrCreateUser(userOneAddress)
+   createLeopard(BigInt.fromI32(1), collectionAddress, userOneAddress.toString(), BigInt.fromString("1"))
+
+   let tokenId = BigInt.fromI32(1);
+   let transactionHash = Bytes.fromHexString("0x02082029394f438ca1472adeb502c30376df44983ca7cc1f99c4917e14223e90");
+   let blockNumber = BigInt.fromString("4");
+   let transferEvent = createTransferEvent(userOneAddress, userTwoAddress, tokenId, collectionAddress, transactionHash, blockNumber);
+
+   //Act
+   handleTransfer(transferEvent)
+  
+   //Assert
+   assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", userTwoAddress.toHexString());
+   assert.fieldEquals("Leopard", tokenId.toHexString(), "lastModifiedBlock", blockNumber.toString());
+   assert.fieldEquals("Transfer", transactionHash.toHexString(), "leopard", tokenId.toHexString());
+   assert.fieldEquals("Transfer", transactionHash.toHexString(), "sender", userOneAddress.toHexString());
+   assert.fieldEquals("Transfer", transactionHash.toHexString(), "receiver", userTwoAddress.toHexString());
   })
 })
