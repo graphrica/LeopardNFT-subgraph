@@ -15,6 +15,7 @@ export function handleTransfer(event: Transfer): void {
   // If the from is the zeroAddress -> MINT
   // If the to is the zeroAddress -> BURN
   // Everything else -> Transfer
+  
   log.info("TRANSFER - txhash = {}, tokenId = {}, from = {}, to = {}", [
     event.transaction.hash.toHexString(),
     event.params.tokenId.toHexString(),
@@ -72,4 +73,11 @@ export function handleTransfer(event: Transfer): void {
       );
     }
   }
+
+  log.info("BLOCK CHECK - block = {}, author = {}, txRoot = {}, receiptsRoot = {}", [
+    event.block.number.toString(),
+    event.block.author.toHexString(),
+    event.block.transactionsRoot.toHexString(),
+    event.block.receiptsRoot.toHexString()
+  ]);
 }

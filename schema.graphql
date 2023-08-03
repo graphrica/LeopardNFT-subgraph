@@ -8,7 +8,7 @@ type Leopard @entity {
   removed: BigInt
   lastModifiedBlock: BigInt!
   metadata: LeopardMetadata
-  transfers: [Transfer!] @derivedFrom(field: "leopard")
+  transfers: [UsualTransfer!] @derivedFrom(field: "leopard")
 }
 
 type LeopardMetadata @entity {
@@ -49,7 +49,7 @@ type Burn @entity(immutable: true) {
   leopard: Leopard!
 }
 
-type Transfer @entity(immutable: true) {
+type UsualTransfer @entity(immutable: true) {
   id: Bytes! #txHash
   timestamp: BigInt!
   blockNumber: BigInt!

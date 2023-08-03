@@ -1,5 +1,5 @@
-import { Bytes, BigInt, Address } from "@graphprotocol/graph-ts";
-import { User, Leopard, Burn, Mint, Transfer } from "../generated/schema";
+import { Bytes, BigInt, Address, store } from "@graphprotocol/graph-ts";
+import { User, Leopard, Burn, Mint, UsualTransfer } from "../generated/schema";
 import { LeopardNFT } from "../generated/LeopardNFT/LeopardNFT";
 import { LeopardMetadata as LeopardMetadataTemplate } from "../generated/templates";
 
@@ -69,7 +69,7 @@ export function createMint(txHash: Bytes, tokenID: BigInt, receiverID: string, b
 
 
 export function createTransfer(txHash: Bytes, tokenID: BigInt, receiverID: string, senderID: string, blockNumber: BigInt, timestamp: BigInt) : void {
-    let transfer = new Transfer(txHash);
+    let transfer = new UsualTransfer(txHash);
     transfer.leopard = tokenID.toHexString();
     transfer.timestamp = timestamp;
     transfer.blockNumber = blockNumber;

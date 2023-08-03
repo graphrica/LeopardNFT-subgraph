@@ -3,11 +3,13 @@ import {
   test,
   clearStore,
   afterEach,
-  assert
+  assert,
+  dataSourceMock
 } from "matchstick-as/assembly/index"
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
 import { handleTransfer } from "../src/leopard-nft"
 import { ADDRESS_ZERO, collectionAddress, createLeopard, createMockedURICall, createTransferEvent, getOrCreateUser, userOneAddress, userThreeAddress, userTwoAddress } from "./leopard-nft-utils"
+import { Leopard } from "../generated/schema"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
@@ -32,9 +34,18 @@ describe("Handle Transfer Event", () => {
 
     //Assert
     assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", userTwoAddress.toHexString());
+    // let leopard = Leopard.load(tokenId.toHexString());
+    // if(leopard){
+    //   let transfers = leopard.transfers;
+    //   let expected = [transactionHash.toHexString()];
+    //   if(transfers != null){
+    //     assert.arrayEquals(transfers, );
+    //   }
+      
+    // }
     assert.fieldEquals("Mint", transactionHash.toHexString(), "blockNumber", blockNumber.toString());
     assert.fieldEquals("Mint", transactionHash.toHexString(), "receiver", userTwoAddress.toHexString());
-    assert.fieldEquals("Mint", transactionHash.toHexString(), "leopard", tokenId.toHexString())
+    assert.fieldEquals("Mint", transactionHash.toHexString(), "leopard", '0x4')
   })
   test("Burn", () => {
     //Arrange
@@ -73,8 +84,8 @@ describe("Handle Transfer Event", () => {
    //Assert
    assert.fieldEquals("Leopard", tokenId.toHexString(), "owner", userTwoAddress.toHexString());
    assert.fieldEquals("Leopard", tokenId.toHexString(), "lastModifiedBlock", blockNumber.toString());
-   assert.fieldEquals("Transfer", transactionHash.toHexString(), "leopard", tokenId.toHexString());
-   assert.fieldEquals("Transfer", transactionHash.toHexString(), "sender", userOneAddress.toHexString());
-   assert.fieldEquals("Transfer", transactionHash.toHexString(), "receiver", userTwoAddress.toHexString());
+   assert.fieldEquals("UsualTransfer", transactionHash.toHexString(), "leopard", tokenId.toHexString());
+   assert.fieldEquals("UsualTransfer", transactionHash.toHexString(), "sender", userOneAddress.toHexString());
+   assert.fieldEquals("UsualTransfer", transactionHash.toHexString(), "receiver", userTwoAddress.toHexString());
   })
 })

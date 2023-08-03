@@ -5,6 +5,7 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ graphrica/leopard-nft",
+    "deploy-hosted" : "graph deploy --product hosted-service graphrica/leopard-nft",
     "create-local": "graph create --node http://localhost:8020/ graphrica/leopard-nft",
     "remove-local": "graph remove --node http://localhost:8020/ graphrica/leopard-nft",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 graphrica/leopard-nft",
